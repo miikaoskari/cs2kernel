@@ -1,0 +1,62 @@
+;
+; cs2kernel.inf
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System ; TODO: specify appropriate Class
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318} ; TODO: specify appropriate ClassGuid
+Provider    = %ManufacturerName%
+CatalogFile = cs2kernel.cat
+DriverVer   = ; TODO: set DriverVer in stampinf property pages
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+cs2kernel.sys = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName% = Standard,NT$ARCH$.10.0...16299 ; %13% support introduced in build 16299
+
+[Standard.NT$ARCH$.10.0...16299]
+%cs2kernel.DeviceDesc% = cs2kernel_Device, Root\cs2kernel ; TODO: edit hw-id
+
+[cs2kernel_Device.NT]
+CopyFiles = File_Copy
+
+[File_Copy]
+cs2kernel.sys
+
+;-------------- Service installation
+[cs2kernel_Device.NT.Services]
+AddService = cs2kernel,%SPSVCINST_ASSOCSERVICE%, cs2kernel_Service_Inst
+
+; -------------- cs2kernel driver install sections
+[cs2kernel_Service_Inst]
+DisplayName    = %cs2kernel.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %13%\cs2kernel.sys
+
+[cs2kernel_Device.NT.Wdf]
+KmdfService = cs2kernel, cs2kernel_wdfsect
+
+[cs2kernel_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "<Your manufacturer name>" ;TODO: Replace with your manufacturer name
+DiskName = "cs2kernel Installation Disk"
+cs2kernel.DeviceDesc = "cs2kernel Device"
+cs2kernel.SVCDESC = "cs2kernel Service"
