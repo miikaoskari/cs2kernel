@@ -61,7 +61,7 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 			kernelReadRequest = (KERNEL_READ_REQUEST*)Irp->AssociatedIrp.SystemBuffer;
 			PEPROCESS process;
 			ntStatus = PsLookupProcessByProcessId((HANDLE)kernelReadRequest->pid, &process);
-			MmCopyVirtualMemory(process, (PVOID)kernelReadRequest->address, PsGetCurrentProcess(), kernelReadRequest->buffer, kernelReadRequest->size, KernelMode, NULL);
+			MmCopyVirtualMemory(PsGetCurrentProcess(), (PVOID)kernelReadRequest->address, process, kernelReadRequest->buffer, kernelReadRequest->size, KernelMode, NULL);
 			ObReferenceObject(process);
 		default:
 			// The specified I/O control code is unrecognized by this driver.
