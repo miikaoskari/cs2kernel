@@ -1,6 +1,6 @@
 [submodule "cs2kernel/external/cs2-dumper"]
-	path = cs2kernel/external/cs2-dumper
+	path = client/external/cs2-dumper
 	url = https://github.com/miikaoskari/cs2-dumper
 [submodule "cs2kernel/external/imgui"]
-	path = cs2kernel/external/imgui
+	path = client/external/imgui
 	url = https://github.com/miikaoskari/imgui
