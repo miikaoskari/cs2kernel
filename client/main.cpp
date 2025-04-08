@@ -53,9 +53,13 @@ ULONG FindProcessId(const char* processName) {
 }
 
 int main() {
-    hDriver = CreateFileW(L"\\\\.\\SIOCTL", GENERIC_WRITE | GENERIC_READ | GENERIC_EXECUTE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_SYSTEM, 0);
-	std::cout << "Driver handle: " << hDriver << std::endl;
-    
+    //hDriver = CreateFileW(L"\\Device\\Video1", GENERIC_WRITE | GENERIC_READ | GENERIC_EXECUTE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_SYSTEM, 0);
+	
+	const WCHAR* deviceName = L"\\\\.\\IoctlTest";
+    hDriver = CreateFile(deviceName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+    std::cout << "Driver handle: " << hDriver << std::endl;
+
     ULONG pid = FindProcessId("cs2.exe");
 
 	if (pid == 0) {
