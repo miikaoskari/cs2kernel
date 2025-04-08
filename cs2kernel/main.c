@@ -71,6 +71,13 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 			ntStatus = PsLookupProcessByProcessId((HANDLE)kernelReadRequest->pid, &process);
 			if (NT_SUCCESS(ntStatus))
 			{
+				if (!MmIsAddressValid((PVOID)kernelReadRequest->address))
+				{
+					ntStatus = STATUS_INVALID_ADDRESS;
+					ObDereferenceObject(process);
+					break;
+				}
+
 				ntStatus = MmCopyVirtualMemory(
 					PsGetCurrentProcess(),
 					(PVOID)kernelReadRequest->address,
@@ -80,6 +87,12 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 					KernelMode,
 					NULL
 				);
+
+				if (!NT_SUCCESS(ntStatus))
+				{
+					ntStatus = STATUS_UNSUCCESSFUL;
+				}
+
 				ObDereferenceObject(process);
 			}
 			break;
