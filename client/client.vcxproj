@@ -131,8 +131,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="mem.cpp" />
-    <ClCompile Include="wallhack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="external\cs2-dumper\output\animationsystem_dll.hpp" />
@@ -155,7 +153,6 @@
     <ClInclude Include="external\cs2-dumper\output\soundsystem_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\vphysics2_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\worldrenderer_dll.hpp" />
-    <ClInclude Include="mem.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

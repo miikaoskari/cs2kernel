@@ -52,9 +52,30 @@ ULONG FindProcessId(const char* processName) {
     return 0;
 }
 
-int main() {
-    //hDriver = CreateFileW(L"\\Device\\Video1", GENERIC_WRITE | GENERIC_READ | GENERIC_EXECUTE, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_SYSTEM, 0);
-	
+uintptr_t GetModuleBaseAddress(DWORD pid, CONST WCHAR* target_module)
+{
+    HANDLE snapshotHandle = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, pid);
+    if (snapshotHandle == INVALID_HANDLE_VALUE) {
+        return NULL;
+    }
+    MODULEENTRY32W moduleEntry = { };
+    moduleEntry.dwSize = sizeof(MODULEENTRY32W);
+
+    if (Module32FirstW(snapshotHandle, &moduleEntry)) {
+
+        do {
+
+            if (_wcsicmp(moduleEntry.szModule, target_module) == 0) {
+                CloseHandle(snapshotHandle);
+                return reinterpret_cast<uintptr_t>(moduleEntry.modBaseAddr);
+            }
+        } while (Module32NextW(snapshotHandle, &moduleEntry));
+    }
+    CloseHandle(snapshotHandle);
+    return NULL;
+}
+
+int main() {	
 	const WCHAR* deviceName = L"\\\\.\\IoctlTest";
     hDriver = CreateFile(deviceName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -69,9 +90,19 @@ int main() {
 
 	std::cout << "Found cs2.exe process with PID: " << pid << std::endl;
 
+    uintptr_t clientBaseAddress = GetModuleBaseAddress(pid, L"client.dll");
+    if (clientBaseAddress == 0)
+    {
+        std::cerr << "Failed to find client.dll base address." << std::endl;
+        return 1;
+    }
+
+    std::cout << "client.dll base address: " << std::hex << clientBaseAddress << std::endl;
+
     for(;;)
     {
-        int isPlanted = ReadMemory<int>(hDriver, pid, cs2_dumper::offsets::client_dll::dwPlantedC4);
+        uintptr_t plantedC4Address = clientBaseAddress + cs2_dumper::offsets::client_dll::dwPlantedC4;
+        int isPlanted = ReadMemory<int>(hDriver, pid, plantedC4Address);
 		std::cout << "isPlanted: " << isPlanted << std::endl;
 		
 		Sleep(1000);
