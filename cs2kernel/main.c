@@ -47,6 +47,8 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	PIO_STACK_LOCATION irpSp;
 	NTSTATUS ntStatus = STATUS_SUCCESS;
 	KERNEL_READ_REQUEST* kernelReadRequest = NULL;
+	PEPROCESS process = NULL;
+
 
 	UNREFERENCED_PARAMETER(DeviceObject);
 
@@ -59,10 +61,28 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	{
 		case IOCTL_READ_REQUEST:
 			kernelReadRequest = (KERNEL_READ_REQUEST*)Irp->AssociatedIrp.SystemBuffer;
-			PEPROCESS process;
+
+			if (kernelReadRequest == NULL || kernelReadRequest->size == 0 || kernelReadRequest->address == 0 || kernelReadRequest->buffer == NULL) 
+			{
+				ntStatus = STATUS_INVALID_PARAMETER;
+				break;
+			}
+
 			ntStatus = PsLookupProcessByProcessId((HANDLE)kernelReadRequest->pid, &process);
-			MmCopyVirtualMemory(PsGetCurrentProcess(), (PVOID)kernelReadRequest->address, process, kernelReadRequest->buffer, kernelReadRequest->size, KernelMode, NULL);
-			ObReferenceObject(process);
+			if (NT_SUCCESS(ntStatus))
+			{
+				ntStatus = MmCopyVirtualMemory(
+					PsGetCurrentProcess(),
+					(PVOID)kernelReadRequest->address,
+					process,
+					kernelReadRequest->buffer,
+					kernelReadRequest->size,
+					KernelMode,
+					NULL
+				);
+				ObDereferenceObject(process);
+			}
+			break;
 		default:
 			// The specified I/O control code is unrecognized by this driver.
 			ntStatus = STATUS_INVALID_DEVICE_REQUEST;
