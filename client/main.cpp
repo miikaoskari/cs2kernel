@@ -2,20 +2,19 @@
 #include <TlHelp32.h>
 #include <string>
 #include <iostream>
+#include <d3d11.h>
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
 
-#include "offsets.hpp"
-#include "client_dll.hpp"
-#include "engine2_dll.hpp"
-
 #include "Driver.h"
 #include "Process.h"
+#include "PlayerPawn.h"
 
 
-int main() {	
+INT APIENTRY WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev_instance, _In_ LPSTR cmd_line, _In_ int cmd_show)
+{
     const WCHAR* deviceName = L"\\\\.\\IoctlTest";
 
 	auto& driver = Driver::getInstance();
@@ -35,25 +34,15 @@ int main() {
 	std::cout << "matchmaking.dll base address: " << std::hex << process.matchmakingBaseAddress << std::endl;
 
 
-    uintptr_t playerPawnAddress = process.clientBaseAddress + cs2_dumper::offsets::client_dll::dwLocalPlayerPawn;
-    uintptr_t entityListAddress = process.clientBaseAddress + cs2_dumper::offsets::client_dll::dwEntityList;
+    //uintptr_t entityListAddress = process.clientBaseAddress + cs2_dumper::offsets::client_dll::dwEntityList;
+
+	PlayerPawn playerPawn;
+
 
     for(;;)
     {
-		uintptr_t playerPawn = driver.ReadMemory<uintptr_t>(process.pid, playerPawnAddress);
-		uintptr_t entityList = driver.ReadMemory<uintptr_t>(process.pid, entityListAddress);
-
-        if (playerPawn != NULL)
-        {
-            int team = driver.ReadMemory<int>(process.pid, (playerPawn + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iTeamNum));
-			int health = driver.ReadMemory<int>(process.pid, (playerPawn + cs2_dumper::schemas::client_dll::C_BaseEntity::m_iHealth));
-			int armor = driver.ReadMemory<int>(process.pid, (playerPawn + cs2_dumper::schemas::client_dll::C_CSPlayerPawn::m_ArmorValue));
-
-			std::cout << "Player Team: " << team << std::endl;
-			std::cout << "Player Health: " << health << std::endl;
-			std::cout << "Player Armor: " << armor << std::endl;
-        }
-		
+		playerPawn.ReadData();
+		    
 		Sleep(1000);
     }
 
