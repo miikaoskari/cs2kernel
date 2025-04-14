@@ -76,7 +76,8 @@ uintptr_t GetModuleBaseAddress(DWORD pid, CONST WCHAR* target_module)
 }
 
 int main() {	
-	const WCHAR* deviceName = L"\\\\.\\IoctlTest";
+    const WCHAR* deviceName = L"\\\\.\\IoctlTest";
+
     hDriver = CreateFile(deviceName, GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
     std::cout << "Driver handle: " << hDriver << std::endl;
@@ -102,7 +103,7 @@ int main() {
     for(;;)
     {
         uintptr_t plantedC4Address = clientBaseAddress + cs2_dumper::offsets::client_dll::dwPlantedC4;
-        int isPlanted = ReadMemory<int>(hDriver, pid, plantedC4Address);
+        uintptr_t isPlanted = ReadMemory<uintptr_t>(hDriver, pid, plantedC4Address);
 		std::cout << "isPlanted: " << isPlanted << std::endl;
 		
 		Sleep(1000);
