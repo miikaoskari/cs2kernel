@@ -130,9 +130,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Driver.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerPawn.cpp" />
+    <ClCompile Include="Process.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Driver.h" />
     <ClInclude Include="external\cs2-dumper\output\animationsystem_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\buttons.hpp" />
     <ClInclude Include="external\cs2-dumper\output\client_dll.hpp" />
@@ -153,6 +157,8 @@
     <ClInclude Include="external\cs2-dumper\output\soundsystem_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\vphysics2_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\worldrenderer_dll.hpp" />
+    <ClInclude Include="PlayerPawn.h" />
+    <ClInclude Include="Process.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
