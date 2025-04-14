@@ -15,9 +15,10 @@ typedef struct _KERNEL_READ_REQUEST {
 class Driver
 {
 public:
-	Driver();
-	~Driver();
-	
+	static Driver& getInstance() {
+		static Driver instance;
+		return instance;
+	}
 	
 	void initDriver(const wchar_t* deviceName);
 	void closeDriver();
@@ -41,6 +42,8 @@ public:
 
 private:
 	HANDLE hDriver;
+	Driver();
+	~Driver();
 		
 };
 
