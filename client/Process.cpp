@@ -2,7 +2,39 @@
 
 #include <TlHelp32.h>
 #include <string>
+#include <iostream>
 
+
+Process::Process() : clientBaseAddress(0), engineBaseAddress(0), matchmakingBaseAddress(0), inputSystemBaseAddress(0), soundSystemBaseAddress(0), pid(0) {}
+
+Process::~Process() {}
+
+bool Process::getAllBaseAddresses()
+{
+	pid = FindProcessId("cs2.exe");
+
+	if (pid == 0) {
+		std::cerr << "Failed to find cs2.exe process." << std::endl;
+		return false;
+	}
+
+	clientBaseAddress = GetModuleBaseAddress(pid, L"client.dll");
+	engineBaseAddress = GetModuleBaseAddress(pid, L"engine2.dll");
+	matchmakingBaseAddress = GetModuleBaseAddress(pid, L"matchmaking.dll");
+	inputSystemBaseAddress = GetModuleBaseAddress(pid, L"inputsystem.dll");
+	soundSystemBaseAddress = GetModuleBaseAddress(pid, L"soundsystem.dll");
+
+	if (clientBaseAddress == 0 || 
+        engineBaseAddress == 0 || 
+        matchmakingBaseAddress == 0 || 
+        inputSystemBaseAddress == 0 || 
+        soundSystemBaseAddress == 0)
+    {
+		std::cerr << "Failed to find one or more base addresses." << std::endl;
+		return false;
+	}
+	return true;
+}
 
 ULONG Process::FindProcessId(const char* processName) {
     PROCESSENTRY32W entry;
