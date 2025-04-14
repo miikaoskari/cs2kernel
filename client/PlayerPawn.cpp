@@ -8,7 +8,7 @@
 using namespace cs2_dumper::offsets::client_dll;
 using namespace cs2_dumper::schemas::client_dll;
 
-inline void PlayerPawn::ReadData()
+void PlayerPawn::ReadData()
 {
 	auto& d = Driver::getInstance();
 
