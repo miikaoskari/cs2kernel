@@ -9,6 +9,18 @@ DRIVER_INITIALIZE DriverEntry;
 DRIVER_UNLOAD SioctlUnloadDriver;
 
 
+NTSTATUS NTAPI MmCopyVirtualMemory
+(
+	PEPROCESS SourceProcess,
+	PVOID SourceAddress,
+	PEPROCESS TargetProcess,
+	PVOID TargetAddress,
+	SIZE_T BufferSize,
+	KPROCESSOR_MODE PreviousMode,
+	PSIZE_T ReturnSize
+);
+
+
 NTSTATUS SioctlCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 {
 	UNREFERENCED_PARAMETER(DeviceObject);
@@ -49,12 +61,13 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 	KERNEL_READ_REQUEST* kernelReadRequest = NULL;
 	PEPROCESS process = NULL;
 
-
 	UNREFERENCED_PARAMETER(DeviceObject);
 
 	PAGED_CODE();
 
 	irpSp = IoGetCurrentIrpStackLocation(Irp);
+
+	DbgPrint("Received IOCTL: %x\n", irpSp->Parameters.DeviceIoControl.IoControlCode);
 
 	// Determine which I/O control code was specified.
 	switch (irpSp->Parameters.DeviceIoControl.IoControlCode)
@@ -62,42 +75,55 @@ NTSTATUS SioctlDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp)
 		case IOCTL_READ_REQUEST:
 			kernelReadRequest = (KERNEL_READ_REQUEST*)Irp->AssociatedIrp.SystemBuffer;
 
-			if (kernelReadRequest == NULL || kernelReadRequest->size == 0 || kernelReadRequest->address == 0 || kernelReadRequest->buffer == NULL) 
+			if (kernelReadRequest == NULL || 
+				kernelReadRequest->size == 0 || 
+				kernelReadRequest->address == 0 || 
+				kernelReadRequest->buffer == NULL) 
 			{
+				DbgPrint("Invalid parameters\n");
 				ntStatus = STATUS_INVALID_PARAMETER;
 				break;
 			}
 
 			ntStatus = PsLookupProcessByProcessId((HANDLE)kernelReadRequest->pid, &process);
-			if (NT_SUCCESS(ntStatus))
+			if (!NT_SUCCESS(ntStatus))
 			{
-				if (!MmIsAddressValid((PVOID)kernelReadRequest->address))
-				{
-					ntStatus = STATUS_INVALID_ADDRESS;
-					ObDereferenceObject(process);
-					break;
-				}
-
-				ntStatus = MmCopyVirtualMemory(
-					PsGetCurrentProcess(),
-					(PVOID)kernelReadRequest->address,
-					process,
-					kernelReadRequest->buffer,
-					kernelReadRequest->size,
-					KernelMode,
-					NULL
-				);
-
-				if (!NT_SUCCESS(ntStatus))
-				{
-					ntStatus = STATUS_UNSUCCESSFUL;
-				}
-
-				ObDereferenceObject(process);
+				DbgPrint("Failed to lookup process: %x\n", ntStatus);
+				break;
 			}
+
+			PEPROCESS targetProcess = PsGetCurrentProcess();
+
+			if (!targetProcess)
+			{
+				DbgPrint("Failed to get target process\n");
+				ObDereferenceObject(process);
+				ntStatus = STATUS_UNSUCCESSFUL;
+				break;
+			}
+
+			SIZE_T bytesCopied = 0;
+			ntStatus = MmCopyVirtualMemory(
+				process,
+				(PVOID)kernelReadRequest->address,
+				targetProcess,
+				kernelReadRequest->buffer,
+				kernelReadRequest->size,
+				KernelMode,
+				&bytesCopied
+			);
+
+			if (!NT_SUCCESS(ntStatus))
+			{
+				DbgPrint("Failed to copy memory: %x\n", ntStatus);
+				ntStatus = STATUS_UNSUCCESSFUL;
+			}
+
+			ObDereferenceObject(process);
 			break;
 		default:
 			// The specified I/O control code is unrecognized by this driver.
+			DbgPrint("Unrecognized IOCTL: %x\n", irpSp->Parameters.DeviceIoControl.IoControlCode);
 			ntStatus = STATUS_INVALID_DEVICE_REQUEST;
 			break;
 	}
