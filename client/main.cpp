@@ -11,9 +11,11 @@
 #include "Driver.h"
 #include "Process.h"
 #include "PlayerPawn.h"
+#include "Game.h"
 
 
-INT APIENTRY WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev_instance, _In_ LPSTR cmd_line, _In_ int cmd_show)
+
+int main()
 {
     const WCHAR* deviceName = L"\\\\.\\IoctlTest";
 
@@ -36,12 +38,12 @@ INT APIENTRY WinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev_instance, 
 
     //uintptr_t entityListAddress = process.clientBaseAddress + cs2_dumper::offsets::client_dll::dwEntityList;
 
-	PlayerPawn playerPawn;
-
 
     for(;;)
     {
-		playerPawn.ReadData();
+		
+		
+		
 		    
 		Sleep(1000);
     }

@@ -131,7 +131,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Driver.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PlayerEntity.cpp" />
     <ClCompile Include="PlayerPawn.cpp" />
     <ClCompile Include="Process.cpp" />
   </ItemGroup>
@@ -157,6 +159,8 @@
     <ClInclude Include="external\cs2-dumper\output\soundsystem_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\vphysics2_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\worldrenderer_dll.hpp" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="PlayerEntity.h" />
     <ClInclude Include="PlayerPawn.h" />
     <ClInclude Include="Process.h" />
   </ItemGroup>
