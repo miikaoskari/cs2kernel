@@ -109,8 +109,9 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,14 +132,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Driver.cpp" />
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PlayerEntity.cpp" />
+    <ClCompile Include="EntityLoop.cpp" />
+    <ClCompile Include="Overlay.cpp" />
     <ClCompile Include="PlayerPawn.cpp" />
     <ClCompile Include="Process.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Driver.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="external\cs2-dumper\output\animationsystem_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\buttons.hpp" />
     <ClInclude Include="external\cs2-dumper\output\client_dll.hpp" />
@@ -160,7 +164,8 @@
     <ClInclude Include="external\cs2-dumper\output\vphysics2_dll.hpp" />
     <ClInclude Include="external\cs2-dumper\output\worldrenderer_dll.hpp" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="PlayerEntity.h" />
+    <ClInclude Include="EntityLoop.h" />
+    <ClInclude Include="Overlay.h" />
     <ClInclude Include="PlayerPawn.h" />
     <ClInclude Include="Process.h" />
   </ItemGroup>

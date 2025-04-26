@@ -1,8 +1,6 @@
 #include <Windows.h>
-#include <TlHelp32.h>
 #include <string>
 #include <iostream>
-#include <d3d11.h>
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -15,8 +13,7 @@
 
 
 
-int main()
-{
+INT APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, INT nCmdShow) {
     const WCHAR* deviceName = L"\\\\.\\IoctlTest";
 
 	auto& driver = Driver::getInstance();
@@ -34,9 +31,6 @@ int main()
     std::cout << "client.dll base address: " << std::hex << process.clientBaseAddress << std::endl;
 	std::cout << "engine2.dll base address: " << std::hex << process.engineBaseAddress << std::endl;
 	std::cout << "matchmaking.dll base address: " << std::hex << process.matchmakingBaseAddress << std::endl;
-
-
-    //uintptr_t entityListAddress = process.clientBaseAddress + cs2_dumper::offsets::client_dll::dwEntityList;
 
 
     for(;;)
