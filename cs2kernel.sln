@@ -7,8 +7,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cs2kernel", "cs2kernel\cs2k
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "client", "client\client.vcxproj", "{C15AF7B0-4F9F-4E1B-852D-C8552F9BB3B0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "clientexternal", "clientexternal\clientexternal.vcxproj", "{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -37,14 +35,6 @@ Global
 		{C15AF7B0-4F9F-4E1B-852D-C8552F9BB3B0}.Release|ARM64.Build.0 = Release|x64
 		{C15AF7B0-4F9F-4E1B-852D-C8552F9BB3B0}.Release|x64.ActiveCfg = Release|x64
 		{C15AF7B0-4F9F-4E1B-852D-C8552F9BB3B0}.Release|x64.Build.0 = Release|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Debug|ARM64.ActiveCfg = Debug|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Debug|ARM64.Build.0 = Debug|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Debug|x64.ActiveCfg = Debug|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Debug|x64.Build.0 = Debug|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Release|ARM64.ActiveCfg = Release|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Release|ARM64.Build.0 = Release|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Release|x64.ActiveCfg = Release|x64
-		{FCAA84A7-C41C-4CD4-BE31-6E160F31FEDC}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
