@@ -2,11 +2,11 @@
 
 constexpr auto PLAYER_ENTITY_COUNT = 64;
 
-class PlayerEntity
+class EntityLoop
 {
 public:
-	void run();
-
+	void runPlayerLoop();
+	void runWorldLoop();
 
 };
 
