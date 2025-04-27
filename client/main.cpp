@@ -2,10 +2,6 @@
 #include <string>
 #include <iostream>
 
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
-
 #include "Driver.h"
 #include "Process.h"
 #include "PlayerPawn.h"
@@ -13,8 +9,9 @@
 
 
 
-INT APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, INT nCmdShow) {
-    const WCHAR* deviceName = L"\\\\.\\IoctlTest";
+INT APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
+{
+	const WCHAR* deviceName = L"\\\\.\\IoctlTest";
 
 	auto& driver = Driver::getInstance();
 	driver.initDriver(deviceName);
