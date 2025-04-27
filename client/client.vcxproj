@@ -107,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,6 +123,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -132,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Draw.cpp" />
     <ClCompile Include="Driver.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="external\imgui\backends\imgui_impl_dx11.cpp" />
@@ -147,8 +150,10 @@
     <ClCompile Include="Overlay.cpp" />
     <ClCompile Include="PlayerPawn.cpp" />
     <ClCompile Include="Process.cpp" />
+    <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Draw.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="external\cs2-dumper\output\animationsystem_dll.hpp" />
@@ -184,6 +189,9 @@
     <ClInclude Include="Overlay.h" />
     <ClInclude Include="PlayerPawn.h" />
     <ClInclude Include="Process.h" />
+    <ClInclude Include="Vector.h" />
+    <ClInclude Include="View.h" />
+    <ClInclude Include="ViewMatrix.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
