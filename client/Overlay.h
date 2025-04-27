@@ -6,7 +6,7 @@
 class Overlay
 {
 public:
-	void init(HWND hwnd, ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+	void init(HINSTANCE instance, int nCmdShow);
 	void cleanup();
 	void render();
 

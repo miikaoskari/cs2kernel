@@ -6,6 +6,7 @@
 #include "Process.h"
 #include "PlayerPawn.h"
 #include "Game.h"
+#include "Overlay.h"
 
 
 
@@ -28,6 +29,10 @@ INT APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     std::cout << "client.dll base address: " << std::hex << process.clientBaseAddress << std::endl;
 	std::cout << "engine2.dll base address: " << std::hex << process.engineBaseAddress << std::endl;
 	std::cout << "matchmaking.dll base address: " << std::hex << process.matchmakingBaseAddress << std::endl;
+
+
+	Overlay overlay;
+	overlay.init(hInstance, nShowCmd);
 
 
     for(;;)
