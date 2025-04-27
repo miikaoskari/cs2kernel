@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Driver.h"
 #include "Process.h"
+#include "Vector.h"
+#include "ViewMatrix.h"
 
 #include "offsets.hpp"
 #include "client_dll.hpp"
@@ -34,5 +36,6 @@ void Game::ReadData()
 	entityList = d.ReadMemory<uintptr_t>(p.pid, p.clientBaseAddress + dwEntityList);
 	gameRules = d.ReadMemory<uintptr_t>(p.pid, p.clientBaseAddress + dwGameRules);
 	globalVars = d.ReadMemory<uintptr_t>(p.pid, p.clientBaseAddress + dwGlobalVars);
-	
+	viewMatrix = d.ReadMemory<ViewMatrix>(p.pid, p.clientBaseAddress + dwViewMatrix);
+	viewAngles = d.ReadMemory<Vector3>(p.pid, p.clientBaseAddress + dwViewAngles);
 }

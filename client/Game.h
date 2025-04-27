@@ -2,6 +2,9 @@
 
 #include <cstddef>
 
+#include "ViewMatrix.h"
+#include "Vector.h"
+
 class Game
 {
 public:
@@ -19,6 +22,9 @@ public:
 
 	int entityIndex;
 
+	ViewMatrix viewMatrix;
+
+	Vector3 viewAngles = { 0, 0, 0 };
 
 	void ReadData();
 };
