@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include "Vector.h"
 
 class Entity
 {
@@ -16,6 +17,10 @@ public:
 
 	float aimPunchAngle;
 	float sensitivity;
+
+	Vector3 position;
+	Vector3 view;
+	Vector3 velocity;
 
 	bool isScoped;
 
