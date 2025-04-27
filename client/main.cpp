@@ -31,9 +31,8 @@ INT APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	std::cout << "matchmaking.dll base address: " << std::hex << process.matchmakingBaseAddress << std::endl;
 
 
-	Overlay overlay;
-	overlay.init(hInstance, nShowCmd);
-
+	Overlay overlay(hInstance, nShowCmd);
+	overlay.render();
 
     for(;;)
     {
