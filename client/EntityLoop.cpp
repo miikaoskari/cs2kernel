@@ -4,6 +4,8 @@
 #include "Driver.h"
 #include "Process.h"
 #include "Entity.h"
+#include "Draw.h"
+#include "View.h"
 
 #include "offsets.hpp"
 #include "client_dll.hpp"
@@ -38,31 +40,45 @@ void EntityLoop::runPlayerLoop()
 	{
 		uintptr_t entity = d.ReadMemory<uintptr_t>(p.pid, game.entityList + ((8 * (i & 0x7FFF) >> 9) + 16));
 		if(entity == 0)
+		{
 			continue;
+		}
 
 		uintptr_t entityController = d.ReadMemory<uintptr_t>(p.pid, entity + (120) * (i & 0x1FF));
 		if (entityController == 0)
+		{
 			continue;
+		}
 
 		uintptr_t entityControllerPawn = d.ReadMemory<uintptr_t>(p.pid, entityController + CCSPlayerController::m_hPlayerPawn);
 		if (entityControllerPawn == 0)
+		{
 			continue;
+		}
 
 		uintptr_t listEntity = d.ReadMemory<uintptr_t>(p.pid, game.entityList + (0x8 * ((entityControllerPawn & 0x7FFFF) >> 9) + 16));
 		if (listEntity == 0)
+		{
 			continue;
+		}
 
 		uintptr_t entityPawn = d.ReadMemory<uintptr_t>(p.pid, listEntity + (120) * (entityControllerPawn & 0x1FF));
 		if (entityPawn == 0)
+		{
 			continue;
-		
-		// Skip the local player
-		if (entityPawn == playerPawn.pawn)
-			continue;
+		}
 
 		entities[i].ReadData(entityPawn, entityController);
 
+		
+		Vector3 headPos = entities[i].position + Vector3(0.0f, 0.0f, 72.0f);
 
+		Vector2 entityScreenPos;
+
+        if (project3DWorldTo2D(entities[i].position, entityScreenPos, game.viewMatrix))
+        {
+			Draw::drawPlayerBox(entityScreenPos, entityScreenPos, ImColor(255, 0, 0));
+        }
 
 	}
 }
