@@ -7,8 +7,11 @@
 #include "PlayerPawn.h"
 #include "Game.h"
 #include "Overlay.h"
+#include "EntityLoop.h"
+#include "imgui.h"
 
 
+static bool isRunning = true;
 
 INT APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -32,17 +35,42 @@ INT APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 	Overlay overlay(hInstance, nShowCmd);
-	overlay.render();
+	EntityLoop entityLoop;
 
-    for(;;)
-    {
-		
-		
-		
-		    
-		Sleep(1000);
-    }
+	while (isRunning)
+	{
+		MSG msg;
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+		{
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+			if (msg.message == WM_QUIT)
+			{
+				return 0;
+			}
+		}
 
+		// Start the Dear ImGui frame
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::ShowDemoWindow(&isRunning);
+
+		entityLoop.runPlayerLoop();
+		//overlay.render();
+
+		ImGui::Render();
+		overlay.deviceContext->OMSetRenderTargets(1, &overlay.renderTargetView, nullptr);
+
+		constexpr float color[4]{ 0.f, 0.f, 0.f, 0.f };
+		overlay.deviceContext->ClearRenderTargetView(overlay.renderTargetView, color);
+
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+		overlay.swapChain->Present(1, 0); // Present with vsync
+
+	}
 
     return 0;
 }

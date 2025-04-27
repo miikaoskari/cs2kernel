@@ -7,6 +7,7 @@
 #include <Windows.h>
 #include <dwmapi.h>
 #include <d3d11.h>
+#include "Draw.h"
 
 
 LRESULT CALLBACK window_procedure(HWND hwnd, UINT message, WPARAM w_param, LPARAM l_param)
@@ -25,56 +26,6 @@ LRESULT CALLBACK window_procedure(HWND hwnd, UINT message, WPARAM w_param, LPARA
 	return DefWindowProc(hwnd, message, w_param, l_param);
 }
 
-void Overlay::render()
-{
-	bool running = true;
-	while (running)
-	{
-		MSG msg;
-		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-			if (msg.message == WM_QUIT)
-			{
-				running = false;
-			}
-		}
-		
-		if (!running)
-		{
-			break;
-		}
-		
-
-		// rendering here!
-		// (Your code process and dispatch Win32 messages)
-		// Start the Dear ImGui frame
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-		
-
-		ImGui::GetBackgroundDrawList()->AddCircleFilled({ 500,500 }, 10.f, ImColor(1.f, 0.f, 0.f));
-
-
-		// Rendering
-		// (Your code clears your framebuffer, renders your other stuff etc.)
-		ImGui::Render();
-
-		constexpr float color[4]{ 0.f, 0.f, 0.f, 0.f };
-		deviceContext->OMSetRenderTargets(1, &renderTargetView, nullptr);
-		deviceContext->ClearRenderTargetView(renderTargetView, color);
-
-
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-		swapChain->Present(1, 0); // Present with vsync
-	}
-	
-	PostQuitMessage(0);
-}
-
 void Overlay::initWindowContext()
 {
 	wc.cbSize = sizeof(WNDCLASSEXW);
@@ -85,6 +36,9 @@ void Overlay::initWindowContext()
 	
 	RegisterClassExW(&wc);
 
+	ws.x = GetSystemMetrics(SM_CXSCREEN);
+	ws.y = GetSystemMetrics(SM_CYSCREEN);
+
 	hwnd = CreateWindowExW(
 		WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED,
 		wc.lpszClassName,
@@ -92,8 +46,8 @@ void Overlay::initWindowContext()
 		WS_POPUP,
 		0,
 		0,
-		GetSystemMetrics(SM_CXSCREEN),
-		GetSystemMetrics(SM_CYSCREEN),
+		ws.x,
+		ws.y,
 		nullptr,
 		nullptr,
 		wc.hInstance,
@@ -203,7 +157,6 @@ void Overlay::initImGuiContext()
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(device, deviceContext);
-
 }
 
 void Overlay::cleanupImGuiContext()

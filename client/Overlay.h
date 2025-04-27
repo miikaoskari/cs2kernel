@@ -10,6 +10,12 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+struct windowSize {
+	int x, y;
+};
+
+inline windowSize ws;
+
 constexpr D3D_FEATURE_LEVEL levels[2]{
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_0
@@ -18,6 +24,18 @@ constexpr D3D_FEATURE_LEVEL levels[2]{
 class Overlay
 {
 public:
+	HINSTANCE instance;
+	int nCmdShow;
+
+	HWND hwnd;
+	WNDCLASSEXW wc;
+
+	ID3D11Device* device = nullptr;
+	ID3D11DeviceContext* deviceContext = nullptr;
+	IDXGISwapChain* swapChain = nullptr;
+	ID3D11RenderTargetView* renderTargetView = nullptr;
+	ID3D11Texture2D* backBuffer = nullptr;
+
 	Overlay(HINSTANCE instance, int nCmdShow)
 		: instance{instance}
 		, nCmdShow{nCmdShow}
@@ -36,6 +54,9 @@ public:
 
 	void render();
 
+private:
+	
+
 	void initWindowContext();
 	void cleanupWindowContext();
 
@@ -44,23 +65,5 @@ public:
 
 	void initImGuiContext();
 	void cleanupImGuiContext();
-
-
-private:
-	HINSTANCE instance;
-	int nCmdShow;
-
-	HWND hwnd;
-	WNDCLASSEXW wc;
-
-	ID3D11Device* device = nullptr;
-	ID3D11DeviceContext* deviceContext = nullptr;
-	IDXGISwapChain* swapChain = nullptr;
-	ID3D11RenderTargetView* renderTargetView = nullptr;
-	ID3D11Texture2D* backBuffer = nullptr;	
-
-
-
-
 };
 
