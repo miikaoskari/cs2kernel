@@ -30,7 +30,7 @@ public:
 
 		if (!isDriverLoaded()) {
 			std::cerr << "Driver not loaded." << std::endl;
-			return false;
+			return T{};
 		}
 
 		KERNEL_READ_REQUEST req = { pid, address, &value, sizeof(T) };
